@@ -1,30 +1,38 @@
 package lqs0.dev.open.plugin.other.app;
 
-import com.kingdee.cosmic.ctrl.common.CtrlUtil;
-import kd.bos.bill.MobileBillShowParameter;
-import kd.bos.context.RequestContext;
-import kd.bos.dataentity.OperateOption;
+import com.alibaba.fastjson.JSONObject;
 import kd.bos.dataentity.entity.DynamicObject;
+import kd.bos.dataentity.entity.DynamicObjectCollection;
+import kd.bos.dataentity.metadata.dynamicobject.DynamicObjectType;
+import kd.bos.dataentity.serialization.DataEntitySerializer;
+import kd.bos.dataentity.serialization.DataEntitySerializerOption;
 import kd.bos.dataentity.utils.StringUtils;
+import kd.bos.dtx.util.DynamicObjectSerializeUtil;
+import kd.bos.entity.EntityMetadataCache;
+import kd.bos.entity.MainEntityType;
 import kd.bos.entity.datamodel.ListSelectedRowCollection;
-import kd.bos.entity.filter.FilterParameter;
-import kd.bos.entity.operate.result.OperationResult;
+import kd.bos.form.CloseCallBack;
+import kd.bos.form.IPageCache;
 import kd.bos.form.MobileFormShowParameter;
 import kd.bos.form.ShowType;
-import kd.bos.form.events.BeforeBindDataEvent;
 import kd.bos.form.events.BeforeDoOperationEventArgs;
+import kd.bos.form.events.ClosedCallBackEvent;
 import kd.bos.form.operate.FormOperate;
-import kd.bos.list.BillList;
 import kd.bos.list.ListFilterParameter;
 import kd.bos.list.MobileListShowParameter;
 import kd.bos.list.plugin.AbstractMobListPlugin;
+import kd.bos.metadata.print.control.DynamicUnit;
 import kd.bos.orm.query.QCP;
 import kd.bos.orm.query.QFilter;
 import kd.bos.servicehelper.BusinessDataServiceHelper;
-import kd.bos.servicehelper.operation.SaveServiceHelper;
+import lqs0.dev.open.utils.ShoppingCarUtils;
+import scala.Dynamic;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.HashMap;
+import java.util.Map;
+
+
+// 菜品管理移动端插件
 
 
 public class MobDishPagePlugin extends AbstractMobListPlugin{
@@ -79,13 +87,27 @@ public class MobDishPagePlugin extends AbstractMobListPlugin{
         QFilter idFilter = new QFilter("id", QCP.equals,primaryKey);
         DynamicObject chooseDish = BusinessDataServiceHelper.loadSingle("lqs0_dish",
                 "name,lqs0_caixi,lqs0_category,lqs0_price," +
-                        "lqs0_stockquantity,lqs0_shopname,lqs0_dishimg,creator",
+                        "lqs0_stockquantity,lqs0_shopname,lqs0_dishimg,creator,lqs0_dish_size_info,lqs0_dish_flavor_info" +
+                        ",lqs0_dish_size,lqs0_size_price,lqs0_flavor_info_all",
                 new QFilter[]{idFilter});
-        //选择的菜品不为空
-        if(null != chooseDish){
-            //判断购物车中是否有该菜品
-            //首先将购物车中的数据查询出来
 
+        //首先判断一个当前的菜品是否存在口味，规格信息
+        DynamicObjectCollection dishSizeInfo = chooseDish.getDynamicObjectCollection("lqs0_dish_size_info");
+        DynamicObjectCollection dishFlavorInfo = chooseDish.getDynamicObjectCollection("lqs0_dish_flavor_info");
+        //如果存在口味等信息，先打开菜品口味选择界面
+        if(dishFlavorInfo != null && dishFlavorInfo.size() > 0 || dishSizeInfo != null && dishSizeInfo.size() > 0){
+            MobileFormShowParameter showParameter = new MobileFormShowParameter();
+            showParameter.setFormId("lqs0_dish_flavor_select");
+            showParameter.setCustomParam("dishNumber",chooseDish.get("number"));
+            showParameter.setCustomParam("dishName",chooseDish.get("name").toString());
+            showParameter.getOpenStyle().setShowType(ShowType.Modal);
+
+            Map<String, String> m = new HashMap<>(1);
+            m.put("position", "center");
+            showParameter.getOpenStyle().setCustParam(m);
+
+            this.getView().showForm(showParameter);
+        }else if(null != chooseDish){
             /**
              * 构造菜品主键信息进行过滤
              */
@@ -94,43 +116,15 @@ public class MobDishPagePlugin extends AbstractMobListPlugin{
             DynamicObject myShoppingCar = BusinessDataServiceHelper.loadSingle("lqs0_shoppingcar",
                     "number,lqs0_dishname,lqs0_shopname,lqs0_count," +
                             "lqs0_amount,lqs0_image,creator",new QFilter[]{dishFilter});
-            //有，则将数量加一
-            if (null != myShoppingCar){
-                int count = (int) myShoppingCar.get("lqs0_count") + 1;
-                myShoppingCar.set("lqs0_count",count);
-                SaveServiceHelper.saveOperate("lqs0_shoppingcar", new DynamicObject[]{myShoppingCar}, OperateOption.create());
-                //this.getView().showMessage("购物车中已存在该菜品，数量加一！");
-            } else {
-                //否则，想购物车中添加一条菜品记录
-                DynamicObject selfShoppingCar = BusinessDataServiceHelper.newDynamicObject("lqs0_shoppingcar");
-                selfShoppingCar.set("status","C");
-                selfShoppingCar.set("enable","1");
-                Integer count = 1;
-                selfShoppingCar.set("lqs0_count",count);
-                String uniqueID = "jiji_shoppingcar_" + UUID.randomUUID().toString().substring(0,3);
-                selfShoppingCar.set("number",uniqueID);
-                selfShoppingCar.set("creator", RequestContext.get().getCurrUserId());
 
-
-                /*DynamicObject lqs0Shopname = (DynamicObject) chooseDish.get("lqs0_shopname");
-                Object shopPrimaryKey =  lqs0Shopname.getPkValue();
-                QFilter shopFilter = new QFilter("id",QCP.equals,shopPrimaryKey);
-                DynamicObject targetShopName = BusinessDataServiceHelper
-                        .loadSingle("lqs0_shop","number,name",new QFilter[]{shopFilter});
-                selfShoppingCar.set("lqs0_shopname",targetShopName);*/
-
-                selfShoppingCar.set("lqs0_dishname",chooseDish);
-
-                OperationResult saveResult = SaveServiceHelper.saveOperate("lqs0_shoppingcar",
-                        new DynamicObject[]{selfShoppingCar}, OperateOption.create());
-                List<Object> successPkIds = saveResult.getSuccessPkIds();
-                System.out.println(successPkIds.get(0));
-
-                this.getView().showMessage("已经加入购物车！");
+            ShoppingCarUtils shoppingCarPlugin = new ShoppingCarUtils();
+            boolean result = shoppingCarPlugin.addDishToShoppingCar(chooseDish);
+            if(result == true){
+                this.getView().showMessage("菜品成功加入购物车！");
+            }else{
+                this.getView().showMessage("商品太火爆了，稍等重试！");
             }
-
         }
-
         System.out.println(chooseDish);
     }
 
@@ -142,7 +136,7 @@ public class MobDishPagePlugin extends AbstractMobListPlugin{
 
         // 设置显示样式为模态窗口
         showParameter.getOpenStyle().setShowType(ShowType.Modal);
-        showParameter.setHeight("40%");
+        showParameter.setHeight("50%");
 
         Object shopId = this.getView().getFormShowParameter().getCustomParam("shopId");
 

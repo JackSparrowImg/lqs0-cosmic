@@ -127,17 +127,6 @@ public class OlineExamPagePlugin extends AbstractFormPlugin implements CountDown
         }
     }
 
-//    @Override
-//    public void closedCallBack(ClosedCallBackEvent closedCallBackEvent) {
-//        super.closedCallBack(closedCallBackEvent);
-//
-//        IFormView parentView = this.getView().getParentView();
-//
-//        parentView.invokeOperation("close");
-//
-//        this.getView().sendFormAction(parentView);
-//    }
-
 
     @Override
     public void beforeDoOperation(BeforeDoOperationEventArgs args) {
@@ -596,7 +585,8 @@ public class OlineExamPagePlugin extends AbstractFormPlugin implements CountDown
         QFilter numberFilter = new QFilter("id", QCP.equals,examId);
         DynamicObject examInfo = BusinessDataServiceHelper.loadSingle("lqs0_exam",
                 "number,name,lqs0_class_name,lqs0_teacher,lqs0_exam_time_end,lqs0_exam_time," +
-                        "lqs0_single_choice,lqs0_multiple_choice,lqs0_trueorfalse,lqs0_qanda," +
+                        "lqs0_single_choice,lqs0_multiple_choice," +
+                        ",lqs0_qanda," +
                         "lqs0_single_choice_title,lqs0_single_choice_a,lqs0_single_choice_b,lqs0_single_choice_c,lqs0_single_choice_d," +
                         "lqs0_multiple_choice_t,lqs0_multiple_choice_a,lqs0_multiple_choice_b,lqs0_multiple_choice_c,lqs0_multiple_choice_d," +
                         "lqs0_trueorfalse_title" +

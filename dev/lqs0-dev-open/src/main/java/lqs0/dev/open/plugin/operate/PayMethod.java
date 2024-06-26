@@ -62,6 +62,9 @@ public class PayMethod {
         model.setSellerId(AliPayConstant.SELLER_ID);
 
         request.setBizModel(model);
+        request.setNotifyUrl(AliPayConstant.NOTIFY_URL);
+
+        request.setReturnUrl(AliPayConstant.RETURN_URL + Long.parseLong(orderId.toString()));
 
         try {
             AlipayConfig alipayConfig = myAlipayConfig.init();

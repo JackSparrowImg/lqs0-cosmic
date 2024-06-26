@@ -2,6 +2,7 @@ package lqs0.dev.open.plugin.other.app;
 import kd.bos.dataentity.OperateOption;
 import kd.bos.dataentity.entity.DynamicObject;
 import kd.bos.dataentity.utils.StringUtils;
+import kd.bos.entity.operate.result.OperationResult;
 import kd.bos.ext.form.control.CountDown;
 import kd.bos.ext.form.control.events.CountDownEvent;
 import kd.bos.ext.form.control.events.CountDownListener;
@@ -57,21 +58,33 @@ public class PayPagePulgin extends AbstractMobFormPlugin implements CountDownLis
         QFilter idFilter =  new QFilter("id",QCP.equals,selfOrderId);
         DynamicObject selfOrder = BusinessDataServiceHelper.loadSingle
                 ("lqs0_order", "number,name,lqs0_status,lqs0_pay_status," +
-                        "lqs0_checkout_time,lqs0_pack_amount,lqs0_estimated_time", new QFilter[]{idFilter});
+                        "lqs0_checkout_time,lqs0_pay_method,lqs0_pack_amount,lqs0_estimated_time", new QFilter[]{idFilter});
 
         Object orderId = selfOrder.getPkValue();
 
         PayMethod payMethod = new PayMethod();
         String result = payMethod.pay(value,allmoney,orderId,shop.get("name"));
+
+        //显示支付成功页面
+        /*MobileFormShowParameter showParameter = new MobileFormShowParameter();
+        showParameter.setFormId("lqs0_commit_success");
+        showParameter.getOpenStyle().setShowType(ShowType.Floating);
+        showParameter.setCustomParam("orderId",orderId);
+        this.getView().showForm(showParameter);*/
+
+        //打开支付宝进行支付
+        this.getView().openUrl(result);
+
         if(result != null){
             Date date = new Date();
             long time = date.getTime() + 60 * 60;
             selfOrder.set("lqs0_estimated_time",new Date(time)); //订单预计送达时间
-            selfOrder.set("lqs0_status",2); // 设置订单状态，1：待付款，2：待接单，3：已结单，4：派送中，5：已完成，6：已取消
+            selfOrder.set("lqs0_status",2); // 设置订单状态，1：待付款，2：待接单，3：已结单，4：派送中，5：已完成，6：已取消,7: 已退款
             selfOrder.set("lqs0_pay_status",1); // 设置支付状态，1：已支付，2：未支付，3：退款
-            selfOrder.set("lqs0_pay_status",value); // 设置支付方式，1：微信，2：支付宝，3：校园卡
+            selfOrder.set("lqs0_pay_method",value); // 设置支付方式，1：微信，2：支付宝，3：校园卡
             selfOrder.set("lqs0_checkout_time",new Date());
-            SaveServiceHelper.saveOperate("lqs0_order",new DynamicObject[]{selfOrder}, OperateOption.create());
+            OperationResult saveOperate = SaveServiceHelper.saveOperate("lqs0_order", new DynamicObject[]{selfOrder}, OperateOption.create());
+            String message = saveOperate.getMessage(); //保存结果信息
             CountDown countdown = this.getView().getControl("lqs0_countdown");
             countdown.pause();
             this.getView().showMessage("支付成功");
@@ -79,18 +92,6 @@ public class PayPagePulgin extends AbstractMobFormPlugin implements CountDownLis
             this.getView().showMessage("支付失败");
         }
 
-        this.getView().openUrl(result);
-
-
-        //显示支付成功页面
-        MobileFormShowParameter showParameter = new MobileFormShowParameter();
-        showParameter.setFormId("lqs0_commit_success");
-        showParameter.getOpenStyle().setShowType(ShowType.Floating);
-        showParameter.setCustomParam("orderId",orderId);
-        showParameter.setCustomParam("shopId",shopId);
-        showParameter.setCustomParam("addressId",lqs0Address);
-        showParameter.setCustomParam("allmoney",allmoney);
-        this.getView().showForm(showParameter);
     }
 
     @Override

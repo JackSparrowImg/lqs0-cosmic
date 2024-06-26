@@ -2,6 +2,9 @@ package lqs0.dev.open.plugin.operate;
 
 import com.alibaba.dubbo.common.json.JSONObject;
 import com.alipay.easysdk.factory.Factory;
+import kd.bos.form.MobileFormShowParameter;
+import kd.bos.form.ShowType;
+import kd.bos.form.plugin.AbstractMobFormPlugin;
 import kd.bos.openapi.common.custom.annotation.ApiController;
 import kd.bos.openapi.common.custom.annotation.ApiParam;
 import kd.bos.openapi.common.custom.annotation.ApiPostMapping;
@@ -10,18 +13,22 @@ import lqs0.dev.open.common.PayStatus;
 
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @ApiController(value = "/alipay", desc = "")
-public class AliPayNotifyPlugin {
+public class AliPayNotifyPlugin extends AbstractMobFormPlugin {
     @ApiPostMapping("/notify")
-    public CustomApiResult<String> payNotify(@ApiParam(value = "request", required = true) JSONObject request) throws Exception {
+    public CustomApiResult<String> payNotify(@ApiParam("request") HttpServletRequest request) throws Exception { //HttpServletRequest
+
         System.out.println(request);
-        /*if (request.getParameter("trade_status").equals("TRADE_SUCCESS")) {
+
+        return CustomApiResult.success(PayStatus.PAY_SUCCESS);
+    }
+}
+
+
+/*if (request.getParameter("trade_status").equals("TRADE_SUCCESS")) {
             System.out.println("=========支付宝异步回调========");
             Map<String, String> params = new HashMap<>();
-            Map<String, String[]> requestParams = reqest.getParameterMap();
+            Map<String, String[]> requestParams = request.getParameterMap();
             for (String name : requestParams.keySet()) {
                 params.put(name, request.getParameter(name));
 
@@ -45,6 +52,3 @@ public class AliPayNotifyPlugin {
                 return CustomApiResult.success(PayStatus.PAY_SUCCESS);
             }
         }*/
-        return CustomApiResult.fail(PayStatus.PAY_CANCEL,PayStatus.PAY_CANCEL);
-    }
-}
