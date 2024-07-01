@@ -26,7 +26,7 @@ public class OrderDetailPagePlugin extends AbstractMobFormPlugin {
         //TODO:根据主键值过滤，找到具体的菜品详情列表，和具体的菜品信息
         QFilter idFilter = new QFilter("id", QCP.equals,orderId);
         DynamicObject myOrders = BusinessDataServiceHelper.loadSingle("lqs0_order",
-                "number,lqs0_status,lqs0_order_time,lqs0_pay_method,lqs0_address_num," +
+                "number,lqs0_status,lqs0_order_time,lqs0_pay_method,lqs0_address_num,lqs0_shop," +
                         "lqs0_address_name,lqs0_user_name,lqs0_phone,lqs0_xuan,lqs0_shopname," +
                         "lqs0_amount,lqs0_estimated_time" , new QFilter[]{idFilter});
 
@@ -38,7 +38,7 @@ public class OrderDetailPagePlugin extends AbstractMobFormPlugin {
         Object number = myOrders.get("number");
         Object orderTime = myOrders.get("lqs0_order_time");
         Object payMethod = myOrders.get("lqs0_pay_method");
-        Object shopname = myOrders.get("lqs0_shopname");
+        Object shopname = myOrders.get("lqs0_shop.name");
         Object orderStatus = myOrders.get("lqs0_status");
 
         //设置店铺名称标签

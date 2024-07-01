@@ -38,10 +38,10 @@ public class ShoppingCarPlugin extends AbstractMobListPlugin {
     }
 
     @Override
-    public void afterDoOperation(AfterDoOperationEventArgs afterDoOperationEventArgs) {
-        super.afterDoOperation(afterDoOperationEventArgs);
-        this.getView().updateView();
-    }
+        public void afterDoOperation(AfterDoOperationEventArgs afterDoOperationEventArgs) {
+            super.afterDoOperation(afterDoOperationEventArgs);
+            this.getView().updateView();
+        }
 
     private void AddCount(BeforeDoOperationEventArgs eventArgs) {
         ListSelectedRowCollection listColumns= eventArgs.getListSelectedData();//获得列表所有的字段
@@ -69,7 +69,6 @@ public class ShoppingCarPlugin extends AbstractMobListPlugin {
 
     private void ReduceCount(BeforeDoOperationEventArgs eventArgs) {
         ListSelectedRowCollection listColumns= eventArgs.getListSelectedData();//获得列表所有的字段
-
         //获取当前点击的菜品的主键值
         Object primaryKey = listColumns.get(0).getPrimaryKeyValue();
 
@@ -79,7 +78,6 @@ public class ShoppingCarPlugin extends AbstractMobListPlugin {
                         "lqs0_amount,lqs0_image,creator",new QFilter[]{idFilter});
         if(null != myShoppingCar){
             int count = (int) myShoppingCar.get("lqs0_count");
-
             //数量为一，直接将该购物车中的菜品信息删除
             if (count <= 1){
                 QFilter PKFilter = new QFilter("id", QCP.equals, myShoppingCar.getPkValue());
@@ -97,7 +95,6 @@ public class ShoppingCarPlugin extends AbstractMobListPlugin {
                 //this.getView().showMessage("数量减一！");
             }
         }
-
     }
 
 }

@@ -80,7 +80,7 @@ public class PayPagePulgin extends AbstractMobFormPlugin implements CountDownLis
             long time = date.getTime() + 60 * 60;
             selfOrder.set("lqs0_estimated_time",new Date(time)); //订单预计送达时间
             selfOrder.set("lqs0_status",2); // 设置订单状态，1：待付款，2：待接单，3：已结单，4：派送中，5：已完成，6：已取消,7: 已退款
-            selfOrder.set("lqs0_pay_status",1); // 设置支付状态，1：已支付，2：未支付，3：退款
+            selfOrder.set("lqs0_pay_status",1); // 设置支付状态，1：已支付，2：未支付，3：已退款
             selfOrder.set("lqs0_pay_method",value); // 设置支付方式，1：微信，2：支付宝，3：校园卡
             selfOrder.set("lqs0_checkout_time",new Date());
             OperationResult saveOperate = SaveServiceHelper.saveOperate("lqs0_order", new DynamicObject[]{selfOrder}, OperateOption.create());

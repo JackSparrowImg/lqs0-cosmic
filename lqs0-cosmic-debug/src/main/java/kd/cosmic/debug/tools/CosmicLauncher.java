@@ -110,8 +110,9 @@ public final class CosmicLauncher {
 			setMqConsumerRegister(true, localHostName);
 		}
 		
-		setStartWithQing(false);
-        
+		//setStartWithQing(false);
+		setStartWithQing(true);
+
 		//是否以轻量级环境启动苍穹服务
         setEnableLightWeightDeploy(true);
         

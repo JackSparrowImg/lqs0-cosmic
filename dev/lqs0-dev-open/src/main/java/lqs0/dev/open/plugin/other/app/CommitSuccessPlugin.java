@@ -17,7 +17,6 @@ public class CommitSuccessPlugin extends AbstractMobFormPlugin {
     public void beforeDoOperation(BeforeDoOperationEventArgs eventArgs) {
         super.beforeDoOperation(eventArgs);
 
-        String pageId = this.getView().getPageId();
 
         String opKey = ((FormOperate)eventArgs.getSource()).getOperateKey();
 

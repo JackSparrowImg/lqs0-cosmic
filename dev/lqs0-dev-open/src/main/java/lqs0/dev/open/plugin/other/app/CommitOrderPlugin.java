@@ -79,9 +79,9 @@ public class CommitOrderPlugin extends AbstractMobListPlugin {
             double price = amount.doubleValue();
 
             //TODO: 计算总金额
-            allMoney += count * price + 2;
+            allMoney += count * price;
         }
-
+        allMoney += 2;
         String  str = String.format("%.2f",allMoney);
         allMoney = Double.parseDouble(str);
         this.getModel().setValue("lqs0_amount",allMoney);
@@ -122,7 +122,7 @@ public class CommitOrderPlugin extends AbstractMobListPlugin {
         showParameter.setCustomParam("selfOrderId",selfOrderId);
 
         //订单创建完成删除自己的购物车
-        //clearnShoppingCar(shopId);
+        clearnShoppingCar(shopId);
 
 
         // 显示表单
@@ -148,7 +148,7 @@ public class CommitOrderPlugin extends AbstractMobListPlugin {
                         "lqs0_phone,lqs0_address",new QFilter[]{addressFilter});
 
         QFilter shopFilter =  new QFilter("id",QCP.equals,shopId);
-        DynamicObject shop = BusinessDataServiceHelper.loadSingle("lqs0_shop","name",new QFilter[]{shopFilter});
+        DynamicObject shop = BusinessDataServiceHelper.loadSingle("lqs0_shop","id,name",new QFilter[]{shopFilter});
 
         //创建订单数据
         DynamicObject selfOrder = BusinessDataServiceHelper.newDynamicObject("lqs0_order");
@@ -165,7 +165,7 @@ public class CommitOrderPlugin extends AbstractMobListPlugin {
         selfOrder.set("lqs0_address_num",lqs0Address);
         selfOrder.set("lqs0_xuan",1);
         selfOrder.set("lqs0_address_num",myAddressBook);
-        selfOrder.set("lqs0_shopname",shop.get("name")); //给店铺名赋值
+        selfOrder.set("lqs0_shop",shop); //给店铺赋值
         selfOrder.set("lqs0_pack_amount","1"); //打包费为一元
         selfOrder.set("lqs0_tableware_number","商家按量提供");
         //TODO:预计送达时间

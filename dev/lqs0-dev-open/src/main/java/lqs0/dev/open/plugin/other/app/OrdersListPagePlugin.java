@@ -8,6 +8,8 @@ import kd.bos.form.events.BeforeDoOperationEventArgs;
 import kd.bos.form.operate.FormOperate;
 import kd.bos.list.plugin.AbstractMobListPlugin;
 
+import java.util.EventObject;
+
 public class OrdersListPagePlugin extends AbstractMobListPlugin {
     @Override
     public void beforeDoOperation(BeforeDoOperationEventArgs eventArgs){
@@ -17,8 +19,23 @@ public class OrdersListPagePlugin extends AbstractMobListPlugin {
 
         if (StringUtils.equals("orderdetails",opKey)){
             orderDetails(eventArgs);
-        } else if (StringUtils.equals("orderdetails",opKey)){
+        } else if (StringUtils.equals("goreview",opKey)){
+            goreView(eventArgs);
         }
+    }
+
+    private void goreView(BeforeDoOperationEventArgs eventArgs) {
+        ListSelectedRowCollection listColumns= eventArgs.getListSelectedData();//获得列表所有的字段
+        //获取当前点击的菜品的主键值
+        Object orderId = listColumns.get(0).getPrimaryKeyValue();
+
+        MobileFormShowParameter showParameter = new MobileFormShowParameter();
+        showParameter.setFormId("lqs0_dish_evaluate_mob");
+        showParameter.getOpenStyle().setShowType(ShowType.Floating);
+        showParameter.setCustomParam("orderId",orderId);
+        // 显示表单
+        this.getView().showForm(showParameter);
+
     }
 
     private void orderDetails(BeforeDoOperationEventArgs eventArgs) {
@@ -38,4 +55,6 @@ public class OrdersListPagePlugin extends AbstractMobListPlugin {
         // 显示表单
         this.getView().showForm(showParameter);
     }
+
+
 }

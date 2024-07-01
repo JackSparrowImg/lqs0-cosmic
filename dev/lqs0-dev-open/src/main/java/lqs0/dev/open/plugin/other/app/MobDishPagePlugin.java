@@ -1,6 +1,7 @@
 package lqs0.dev.open.plugin.other.app;
 
 import com.alibaba.fastjson.JSONObject;
+import kd.bos.context.RequestContext;
 import kd.bos.dataentity.entity.DynamicObject;
 import kd.bos.dataentity.entity.DynamicObjectCollection;
 import kd.bos.dataentity.metadata.dynamicobject.DynamicObjectType;
@@ -85,6 +86,7 @@ public class MobDishPagePlugin extends AbstractMobListPlugin{
 
         //根据主键值过滤，找到该菜品的信息
         QFilter idFilter = new QFilter("id", QCP.equals,primaryKey);
+
         DynamicObject chooseDish = BusinessDataServiceHelper.loadSingle("lqs0_dish",
                 "name,lqs0_caixi,lqs0_category,lqs0_price," +
                         "lqs0_stockquantity,lqs0_shopname,lqs0_dishimg,creator,lqs0_dish_size_info,lqs0_dish_flavor_info" +
@@ -128,24 +130,22 @@ public class MobDishPagePlugin extends AbstractMobListPlugin{
         System.out.println(chooseDish);
     }
 
+
     private void ShowShoppingCar(BeforeDoOperationEventArgs eventArgs) {
-        MobileListShowParameter showParameter = new MobileListShowParameter();
+        MobileFormShowParameter showParameter = new MobileFormShowParameter();
 
-        showParameter.setBillFormId("lqs0_shoppingcar"); // 这里是列表对应的单据标识
-        showParameter.setFormId("bos_moblist"); // 这里是列表的模板标识，可以在设计器列表页寻找
-
+        showParameter.setFormId("lqs0_shoppingcar_mob");
         // 设置显示样式为模态窗口
         showParameter.getOpenStyle().setShowType(ShowType.Modal);
-        showParameter.setHeight("50%");
+
+        Map<String, String> m = new HashMap<>(1);
+        m.put("position", "bottom");
+        showParameter.getOpenStyle().setCustParam(m);
 
         Object shopId = this.getView().getFormShowParameter().getCustomParam("shopId");
-
-
         //根据菜品中的店铺中的id属性进行过滤
-        QFilter qFilter = new QFilter("lqs0_dishname.lqs0_shopname.id",QCP.equals,shopId);
-        ListFilterParameter filterParameter = new ListFilterParameter();
-        filterParameter.setFilter(qFilter);
-        showParameter.setListFilterParameter(filterParameter);
+        showParameter.setCustomParam("shopId",shopId);
+
 
         // 显示表单
         this.getView().showForm(showParameter);

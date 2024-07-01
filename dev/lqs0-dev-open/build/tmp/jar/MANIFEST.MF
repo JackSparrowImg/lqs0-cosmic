@@ -2,17 +2,17 @@ Manifest-Version: 1.0
 Jar-Id: 
 Project-Name: lqs0-dev-open
 Build-Tool: Gradle 7.6.3
-Build-Date: 2024-06-25 21:31:53
+Build-Date: 2024-07-01 20:07:25
 Built-By: Kingdee Cosmic Developer Tools
 Release: 
-Build-Num: 20240625213153501
+Build-Num: 20240701200725612
 App-Name: 
 Git-Branch: du_dev
 Cloud-Name: 
 Group-Name: lqs0.cosmic
 Bundle-Version: 1.0.0
-Git-Commit-Hash: 674230ad5da8516a22494ed1aeeb6b4cac5c8109
-Builddate: 202406252131
+Git-Commit-Hash: 78a1c24b9123752a1a61e5f77b7a942b60b74fb8
+Builddate: 202407012007
 Build-Image: 
 Build-Jdk: 1.8.0_412
 

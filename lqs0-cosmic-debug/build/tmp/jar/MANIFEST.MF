@@ -1,18 +1,18 @@
 Manifest-Version: 1.0
 Jar-Id: 
 Project-Name: lqs0-cosmic-debug
-Build-Tool: Gradle 5.6
-Build-Date: 2024-06-19 17:41:13
+Build-Tool: Gradle 7.6.3
+Build-Date: 2024-06-26 15:46:25
 Built-By: Kingdee Cosmic Developer Tools
 Release: 
-Build-Num: 20240619174113920
+Build-Num: 20240626154625248
 App-Name: 
-Git-Branch: 
+Git-Branch: du_dev
 Cloud-Name: 
 Group-Name: lqs0.cosmic
 Bundle-Version: 1.0.0
-Git-Commit-Hash: 
-Builddate: 202406191741
+Git-Commit-Hash: 78a1c24b9123752a1a61e5f77b7a942b60b74fb8
+Builddate: 202406261546
 Build-Image: 
 Build-Jdk: 1.8.0_412
 
