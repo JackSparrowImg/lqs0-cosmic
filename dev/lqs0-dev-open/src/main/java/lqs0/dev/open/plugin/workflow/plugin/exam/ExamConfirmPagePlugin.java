@@ -48,15 +48,17 @@ public class ExamConfirmPagePlugin extends AbstractFormPlugin {
             Object examId = this.getView().getFormShowParameter().getCustomParam("examId");
             FormShowParameter formShowParameter = new FormShowParameter();
 
-            formShowParameter.setFormId("lqs0_online_exam");
+           // formShowParameter.setFormId("lqs0_online_exam");  // 打开在线考试
+
+            formShowParameter.setFormId("lqs0_exam_face_identify"); //打开人脸识别界面
+
             formShowParameter.setCustomParam("examId",examId);
             formShowParameter.getOpenStyle().setShowType(ShowType.MainNewTabPage);
-/*            formShowParameter.setCloseCallBack(new CloseCallBack(this,"CLOSECALLBACK"));*/
             this.getView().showForm(formShowParameter);
         }
     }
 
-   /* //父页面监听子页面状态，如果子页面关闭，父页面同样关闭
+    //父页面监听子页面状态，如果子页面关闭，父页面同样关闭
     @Override
     public void closedCallBack(ClosedCallBackEvent closedCallBackEvent) {
         super.closedCallBack(closedCallBackEvent);
@@ -66,5 +68,5 @@ public class ExamConfirmPagePlugin extends AbstractFormPlugin {
                 this.getView().close();
             }
         }
-    }*/
+    }
 }

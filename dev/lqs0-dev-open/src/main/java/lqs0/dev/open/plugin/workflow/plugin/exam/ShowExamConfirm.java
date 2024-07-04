@@ -72,7 +72,7 @@ public class ShowExamConfirm extends AbstractBillPlugIn {
             this.getView().showMessage("考试时间已过，不可进入考试");
         } else {
             FormShowParameter formShowParameter = new FormShowParameter();
-            formShowParameter.setFormId("lqs0_confirm_exam");
+            formShowParameter.setFormId("lqs0_confirm_exam");  // 打开考试确认页面
             formShowParameter.setCustomParam("examId", primaryKeyValues[0]);
             formShowParameter.getOpenStyle().setShowType(ShowType.Modal);
             this.getView().showForm(formShowParameter);

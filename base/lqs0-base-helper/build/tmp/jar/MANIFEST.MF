@@ -2,17 +2,17 @@ Manifest-Version: 1.0
 Jar-Id: 
 Project-Name: lqs0-base-helper
 Build-Tool: Gradle 7.6.3
-Build-Date: 2024-07-01 20:25:13
+Build-Date: 2024-07-04 14:10:35
 Built-By: Kingdee Cosmic Developer Tools
 Release: 
-Build-Num: 20240701202513250
+Build-Num: 20240704141035550
 App-Name: 
 Git-Branch: du_dev
 Cloud-Name: 
 Group-Name: lqs0.cosmic
 Bundle-Version: 1.0.0
-Git-Commit-Hash: 78a1c24b9123752a1a61e5f77b7a942b60b74fb8
-Builddate: 202407012025
+Git-Commit-Hash: a078ef33f71fb2ba87a2854ddd5e7d56b6e7d4ea
+Builddate: 202407041410
 Build-Image: 
 Build-Jdk: 1.8.0_412
 

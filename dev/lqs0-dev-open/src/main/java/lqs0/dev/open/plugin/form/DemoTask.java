@@ -16,7 +16,7 @@ public class DemoTask implements IGPTAction {
     public Map<String, String> invokeAction(String action, Map<String, String> params) {
         Map<String , String> result = new HashMap<>();
         if ("GET_CANTEEN_DISHES".equalsIgnoreCase(action)) {
-            //从上一个节点中获取食堂canteen数据
+           /* //从上一个节点中获取食堂canteen数据
             String canteen = params.get("canteen");
             //获取DynamicObject列表
             DynamicObject[] dys = BusinessDataServiceHelper.load("lqs0_dish_evaluate",
@@ -25,19 +25,19 @@ public class DemoTask implements IGPTAction {
                             "name," +
                             "lqs0_score," +
                             "lqs0_content",
-                    (new QFilter("lqs0_basedatapropfield1", QCP.equals, canteen)).toArray());
+                    (new QFilter("lqs0_basedatapropfield1", QCP.equals, canteen)).toArray());*/
             //创建一个JsonArray
             JSONArray jsonArray = new JSONArray();
-            for (DynamicObject dynamicObject : dys) {
+            //for (DynamicObject dynamicObject : dys) {
                 //将每一个评价信息加入JSONArray
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("number", dynamicObject.getString("number"));
-                jsonObject.put("canteen", dynamicObject.getString("lqs0_basedatapropfield1"));
-                jsonObject.put("name", dynamicObject.getString("lqs0_dishname"));
-                jsonObject.put("score", dynamicObject.getString("lqs0_score"));
-                jsonObject.put("content", dynamicObject.getString("lqs0_content"));
+                jsonObject.put("number", "test");
+                jsonObject.put("canteen", "test");
+                jsonObject.put("name", "test");
+                jsonObject.put("score", "test");
+                jsonObject.put("content", "test");
                 jsonArray.add(jsonObject);
-            }
+            //}
             System.out.println(jsonArray.toJSONString());
             //加入resultDynamicObject参数，将JsonArray加入到这个参数当中，然后返回
             result.put("resultDynamicObject", jsonArray.toJSONString());
